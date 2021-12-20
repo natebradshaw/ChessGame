@@ -2,15 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a812c9f0-687e-45cc-9806-ed6b0b7385b1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/ChessGame/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChessGame/board.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChessGame/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChessGame/config2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChessGame/location.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChessGame/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/config2.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/config2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/location.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/location.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/pawn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/piece.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/player.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -121,13 +118,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/ChessGame/game.py</url>
-          <line>30</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">

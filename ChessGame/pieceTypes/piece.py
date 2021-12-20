@@ -32,11 +32,17 @@ class Piece(object):#object OR abc.ABC
 
     def set_dead(self):
         self.alive = False
-        self.location.set_piece(None)
-        self.location = None
 
     @abc.abstractmethod
     def find_possible_moves(self):
         "Finds possible move"
+
+    def find_loc(self, board):
+        for column in range(1, 9):
+            for row in range(1, 9):
+                column_key = str(column)
+                row_key = str(row)
+                if board.structure[column_key][row_key].current_piece == self:
+                    return board.structure[column_key][row_key]
 
 

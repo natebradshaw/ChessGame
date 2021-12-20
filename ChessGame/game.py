@@ -11,6 +11,7 @@ class Game:
         self.board = self.setBoard()
         self.players = {'1': None, '2': None}
         self.game_status = 'Introduction'
+        self.previous_turn = {'old_loc': None, 'new_loc': None, 'moved_piece': None, 'turn_type': None, 'check_status': None}
         self.winner = None
         self.loser = None
 
@@ -22,16 +23,98 @@ class Game:
 
     def introduction(self):
         print("Welcome to Chess")
+        self.set_all_location_attributes()
         for player_count in self.players:
             player = self.setPlayer(int(player_count))
             self.players[player_count] = player
-        self.game_status = 'Player1'
+        self.game_status = '1'
+
+    def set_all_location_attributes(self):
+        for column in range(1, 9):
+            for row in range(1, 9):
+                column_key = str(column)
+                row_key = str(row)
+                self.board.structure[column_key][row_key].set_neighboring_loc()
 
     def turn(self):
         self.board.present_board() #Present the user the board
-        current_player = self.players[self.game_status] #Player makes a move
-        #current_player
+        active_player = self.players[self.game_status] #Player makes a move
+        self.move(active_player)
         self.next_player()
+
+    def move(self, active_player):
+        finished_move = False
+        while finished_move == False:
+            if self.previous_turn['check_status'] == 'check':
+                old_loc, new_loc, selected_piece, unique_turn_type = self.check_move()
+            else:
+                selected_piece = active_player.select_piece(self.previous_turn)
+                old_loc = selected_piece.find_loc(self.board)
+                possible_locations = selected_piece.find_possible_moves(old_loc, self.previous_turn)
+                if len(possible_locations.keys()) == 0:
+                    print('The piece selected has no possible moves. Select another piece.')
+                    continue
+                new_loc, turn_type = self.select_piece_new_location(selected_piece, possible_locations)
+                self.finalize_move(old_loc, new_loc, selected_piece, turn_type)
+                finished_move = True
+
+
+    def check_move(self):
+        pass
+        #return old_loc, new_loc, selected_piece, unique_turn_type
+
+    def get_check_status(self):
+        return None
+
+    def select_piece_new_location(self, selected_piece, possible_locations):
+        valid_location = False
+        while valid_location == False:
+            selected_location = input(f'You selected {selected_piece.short_hand_name}, which of these locations will you move it to? {self.list_out_possible_locations(possible_locations)}')
+            for location in possible_locations:
+                if location.name == selected_location:
+                    valid_location = True
+                    turn_type = possible_locations[location]
+                    return location, turn_type
+            print(f'invalid location, enter location again. possible locations: {self.list_out_possible_locations(possible_locations)}')
+
+    def list_out_possible_locations(self, possible_locations):
+        locs = ''
+        for location in possible_locations:
+            name_formatted = f'|{location.name}|'
+            locs += name_formatted
+        return locs
+
+    def finish_game(self):
+        winner = self.players[self.game_status]
+        if winner.player_key == 1:
+            loser = self.players['2']
+        else:
+            loser = self.players['1']
+        self.winner = winner
+        self.loser = loser
+        self.board.present_board()
+        print(f'{loser.name} (Player {loser.player_key}) is in check mate.')
+        print(f'Congragulations {winner.name} (Player {winner.player_key}), you win!')
+
+
+    def finalize_move(self, old_loc, new_loc, piece, turn_type):
+        if turn_type == 'EnPassant':
+            en_passant_kill = piece.en_passant_kill
+            en_passant_kill.current_piece.set_dead()
+            en_passant_kill.set_piece(None)
+        old_loc.set_piece(None)
+        if new_loc.current_piece is not None:
+            new_loc.current_piece.set_dead()
+        new_loc.set_piece(piece)
+        self.previous_turn['old_loc'] = old_loc
+        self.previous_turn['new_loc'] = new_loc
+        self.previous_turn['moved_piece'] = piece
+        self.previous_turn['turn_type'] = turn_type
+        self.previous_turn['check_status'] = self.get_check_status()
+        if self.previous_turn['check_status'] == 'check_mate':
+            self.finish_game()
+
+
 
     def set_players_pieces(self, player):
         for piece_key in players_pieces_map:
@@ -44,9 +127,6 @@ class Game:
                     player.add_piece(piece)
                     #self.set_initial_piece_location(piece)
 
-    def inital_piece_placement(self):
-        pass
-
     # def set_piece_type(self, piece_type):
     #     for item in possible_piece_types:
     #         if item['name'] == piece_type:
@@ -54,10 +134,10 @@ class Game:
     #             return piece
 
     def next_player(self):
-        if self.game_status == 'Player1':
-            self.game_status = 'Player2'
+        if self.game_status == '1':#player 1
+            self.game_status = '2' #player 2
         else:
-            self.game_status = 'Player2'
+            self.game_status = '1' #player 1
 
     def setPlayer(self, player_count):
         player_name = input(f'Player {player_count}, what is your name?')

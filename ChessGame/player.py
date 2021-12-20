@@ -4,6 +4,7 @@ class Player:
         self.player_key = key
         self.name = name
         self.pieces = []
+        self.win_status = None
 
     def set_name(self, name):
         self.player_key += 1
@@ -12,19 +13,18 @@ class Player:
     def add_piece(self, piece):
         self.pieces.append(piece)
 
-    def move(self, board):
-        selected_piece = self.select_piece()
-        possible_locations = selected_piece.find_possible_moves(board)#return list of locations
-        self.select_piece_new_location(possible_locations)
+    def set_win_status(self, win_status):
+        self.win_status = win_status
 
-    def select_piece(self):
+    def select_piece(self, previous_turn):
         try:
             selected_piece = None
             while selected_piece is None:
                 piece_name = input(f'{self.name}, what piece would you like to move?')
                 for piece in self.pieces:
-                    if piece.short_hand_name == piece_name:
+                    if piece.short_hand_name == piece_name and piece.alive == True:
                         selected_piece = piece
+                        break
                 if selected_piece is None:
                     print(f'Invalid name')
             return selected_piece
@@ -32,4 +32,5 @@ class Player:
             print(f'function move within class player. Exception: {e}')
 
     def select_piece_new_location(self):
-        pass
+        loc = 'test'
+        return loc

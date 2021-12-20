@@ -35,3 +35,5 @@ players_pieces_location_map = {
             'king': '4',
             'queen': '5',
         }
+
+unique_turn_types = ['TwoSpacePawn', 'CheckMate', 'EnPassant']
