@@ -70,6 +70,7 @@ class Game:
         valid_location = False
         while valid_location == False:
             selected_location = input(f'You selected {selected_piece.short_hand_name}, which of these locations will you move it to? {self.list_out_possible_locations(possible_locations)}')
+            selected_location = selected_location.upper()
             for location in possible_locations:
                 if location.name == selected_location:
                     valid_location = True
@@ -102,6 +103,7 @@ class Game:
             en_passant_kill = piece.en_passant_kill
             en_passant_kill.current_piece.set_dead()
             en_passant_kill.set_piece(None)
+            piece.set_en_passant_kill(None)
         old_loc.set_piece(None)
         if new_loc.current_piece is not None:
             new_loc.current_piece.set_dead()

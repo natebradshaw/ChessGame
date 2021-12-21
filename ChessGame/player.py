@@ -21,6 +21,7 @@ class Player:
             selected_piece = None
             while selected_piece is None:
                 piece_name = input(f'{self.name}, what piece would you like to move?')
+                piece_name = piece_name.upper()
                 for piece in self.pieces:
                     if piece.short_hand_name == piece_name and piece.alive == True:
                         selected_piece = piece

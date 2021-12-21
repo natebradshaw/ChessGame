@@ -18,6 +18,9 @@ class Pawn(Piece):
         self.initial_location = loc
         return loc
 
+    def set_en_passant_kill(self, new_status):
+        self.en_passant_kill = new_status
+
     def find_possible_moves(self, loc, previous_turn):
         possible_moves = {}
         if self.owner.player_key == 1:
