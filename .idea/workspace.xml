@@ -5,10 +5,13 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/config2.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/config2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessGame/location.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/location.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/bishop.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/bishop.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/king.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/king.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/knight.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/knight.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/pawn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/piece.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessGame/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/player.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/queen.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/queen.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/rook.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/rook.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

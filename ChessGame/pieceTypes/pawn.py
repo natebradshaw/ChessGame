@@ -104,9 +104,17 @@ class Pawn(Piece):
         if self.initial_location == loc and cent is not None and two_up_cent is not None \
                 and cent.current_piece is None and two_up_cent.current_piece is None:#initial move with two spaces
             possible_moves[two_up_cent] = 'TwoSpacePawn'
+        possible_moves_checked = self.promoted_pawn_check(possible_moves)
+
+        return possible_moves_checked
+
+
+    def get_list(self, possible_moves):
+        return dict.keys(possible_moves)
+
+    def promoted_pawn_check(self, possible_moves):
+        for move in possible_moves:
+            if move.rowID_str == '1' or move.rowID_str == '8':
+                possible_moves[move] = 'Promotion'
         return possible_moves
-
-
-
-
 

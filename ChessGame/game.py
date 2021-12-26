@@ -1,4 +1,7 @@
-
+from ChessGame.pieceTypes.queen import Queen
+from ChessGame.pieceTypes.rook import Rook
+from ChessGame.pieceTypes.bishop import Bishop
+from ChessGame.pieceTypes.knight import Knight
 from ChessGame.player import Player
 from ChessGame.pieceTypes.piece import Piece
 from ChessGame.board import Board
@@ -97,17 +100,70 @@ class Game:
         print(f'{loser.name} (Player {loser.player_key}) is in check mate.')
         print(f'Congragulations {winner.name} (Player {winner.player_key}), you win!')
 
+    def promotion(self, owner):
+        valid_piece_type = False
+        while valid_piece_type == False:
+            piece_type = input(f'The pawn is promted! What type would you like it promoted to? '
+                           f'Queen, Rook, Bishop, Knight?')
+            piece_type_cleaned = piece_type.upper()
+            if piece_type_cleaned == 'QUEEN':
+                piece = Queen(piece_key='queen', player=owner)
+
+            elif piece_type_cleaned == 'ROOK':
+                piece = Rook(piece_key='rook', player=owner)
+
+            elif piece_type_cleaned == 'BISHOP':
+                piece = Bishop(piece_key='bishop', player=owner)
+
+            elif piece_type_cleaned == 'KNIGHT':
+                piece = Knight(piece_key='knight', player=owner)
+            else:
+                print('invalid piece type')
+                continue
+            owner.add_piece(piece)
+            valid_piece_type = True
+            return piece
+
+
+
+        queen = Queen()#maybe change Queen to take in type of initation.
+        return queen
 
     def finalize_move(self, old_loc, new_loc, piece, turn_type):
-        if turn_type == 'EnPassant':
-            en_passant_kill = piece.en_passant_kill
+        if turn_type == 'EnPassant': #Checking for rare types of turns
+            en_passant_kill = piece.en_passant_kill#status, not kill
             en_passant_kill.current_piece.set_dead()
             en_passant_kill.set_piece(None)
             piece.set_en_passant_kill(None)
-        old_loc.set_piece(None)
+        elif turn_type == 'Promotion': #Checking for rare types of turns
+            piece = self.promotion(piece.owner)
+        elif turn_type == 'Castling':
+            if piece.castling_3_king_loc == new_loc:
+                rook_old_loc = piece.paired_3_rook_old_loc
+                rook_new_loc = piece.paired_3_rook_new_loc
+                rook = rook_old_loc.current_piece
+                rook_old_loc.set_piece(None)
+                rook_new_loc.set_piece(rook)
+                rook.moved_status = True
+                piece.moved_status = True
+
+            else:
+                rook_old_loc = piece.paired_4_rook_old_loc
+                rook_new_loc = piece.paired_4_rook_new_loc
+                rook = rook_old_loc.current_piece
+                rook_old_loc.set_piece(None)
+                rook_new_loc.set_piece(rook)
+                rook.moved_status = True
+                piece.moved_status = True
+
+
         if new_loc.current_piece is not None:
             new_loc.current_piece.set_dead()
+
+        old_loc.set_piece(None)
         new_loc.set_piece(piece)
+        piece.moved_status = True
+
         self.previous_turn['old_loc'] = old_loc
         self.previous_turn['new_loc'] = new_loc
         self.previous_turn['moved_piece'] = piece

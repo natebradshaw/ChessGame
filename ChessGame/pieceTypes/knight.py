@@ -112,4 +112,3 @@ class Knight(Piece):
                 locs[loc.top_left_loc] = 'Kill'
             locs_determinded = True
         return locs
-
