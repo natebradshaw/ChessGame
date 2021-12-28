@@ -107,6 +107,15 @@ class Location:
         else:
             return f'[{self.current_piece.short_hand_name}]'
 
+    def present_location_under_threat(self):
+        if self.current_piece is None:
+            return f'[_____]'
+        else:
+            if self.current_piece.under_threat:
+                return f'[True_]'
+            else:
+                return f'[False]'
+
     def set_piece(self, piece):
         self.current_piece = piece
 

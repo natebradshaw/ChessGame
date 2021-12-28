@@ -3,8 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="a812c9f0-687e-45cc-9806-ed6b0b7385b1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessGame/config2.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/config2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/location.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/location.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/bishop.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/bishop.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/king.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/king.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/knight.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/knight.py" afterDir="false" />
@@ -121,6 +122,14 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <condition expression="loc.name.upper() == 'C4'" language="Python" />
+          <url>file://$PROJECT_DIR$/ChessGame/pieceTypes/piece.py</url>
+          <line>585</line>
+          <option name="timeStamp" value="112" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">

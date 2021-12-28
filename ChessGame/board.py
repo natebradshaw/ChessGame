@@ -51,6 +51,22 @@ class Board:
             print(line)
 
 
+    def present_board_statuses(self):
+        header = '  '
+        for column in self.structure:
+            column_name = self.structure[column]['1'].column_name
+            column_formatted = f'|__{column_name.upper()}__|'
+            header += column_formatted
+        print(header)
+        for row in range(1, 9):
+            row_str = str(row)
+            line = f' {row_str}'
+            for column in self.structure:
+                loc = self.structure[column][row_str]
+                line += loc.present_location_under_threat()
+            print(line)
+
+
 
 
 

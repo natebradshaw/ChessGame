@@ -6,11 +6,9 @@ class Bishop(Piece):
         super(Bishop, self).__init__(piece_key, player)
 
     def find_possible_moves(self, loc, previous_turn):
-        possible_moves = {}
-        possible_moves.update(self.find_bottom_right(loc))
-        possible_moves.update(self.find_top_right(loc))
-        possible_moves.update(self.find_bottom_left(loc))
-        possible_moves.update(self.find_top_left(loc))
+        possible_moves = self.bishop_possible_moves(loc, previous_turn)
         return possible_moves
+
+
 
 

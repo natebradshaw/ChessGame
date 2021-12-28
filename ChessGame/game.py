@@ -53,6 +53,7 @@ class Game:
             else:
                 selected_piece = active_player.select_piece(self.previous_turn)
                 old_loc = selected_piece.find_loc(self.board)
+                #test = self.under_threat(selected_piece=selected_piece, loc=old_loc, previous_turn=self.previous_turn)
                 possible_locations = selected_piece.find_possible_moves(old_loc, self.previous_turn)
                 if len(possible_locations.keys()) == 0:
                     print('The piece selected has no possible moves. Select another piece.')
@@ -61,6 +62,8 @@ class Game:
                 self.finalize_move(old_loc, new_loc, selected_piece, turn_type)
                 finished_move = True
 
+    def under_threat(self, selected_piece, loc, previous_turn):
+        threats = selected_piece.under_threat(loc=loc, previous_turn=previous_turn)
 
     def check_move(self):
         pass
@@ -171,7 +174,17 @@ class Game:
         self.previous_turn['check_status'] = self.get_check_status()
         if self.previous_turn['check_status'] == 'check_mate':
             self.finish_game()
+        self.set_all_current_threat_status()
+        self.board.present_board_statuses()
 
+
+    def set_all_current_threat_status(self):
+        for row in range(1, 9):
+            row_str = str(row)
+            for column in self.board.structure:
+                loc = self.board.structure[column][row_str]
+                if loc.current_piece is not None:
+                    loc.current_piece.set_under_threat(loc, self.previous_turn)
 
 
     def set_players_pieces(self, player):

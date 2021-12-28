@@ -11,6 +11,7 @@ class Piece(object):#object OR abc.ABC
         self.alive = True
         self.short_hand_name = f'{player.player_key}{self.key[0].upper()}{self.piece_origin()}'
         self.moved_status = False
+        self.under_threat = False
 
 #consider initiallizing from the child class.. maybe it'd work
     # def set_piece_type(self, piece_type):
@@ -44,10 +45,42 @@ class Piece(object):#object OR abc.ABC
     def set_dead(self):
         self.alive = False
 
+
     @abc.abstractmethod
-    def find_possible_moves(self):
+    def find_possible_moves(self, loc, previous_turn):
         "Finds possible move"
 
+    def king_standard_moves(self, loc, previous_turn):
+        possible_moves = {}
+        possible_moves.update(self.king_find_bottom_right(loc))
+        possible_moves.update(self.king_find_bottom_center(loc))
+        possible_moves.update(self.king_find_bottom_left(loc))
+        possible_moves.update(self.king_find_mid_right(loc))
+        possible_moves.update(self.king_find_mid_left(loc))
+        possible_moves.update(self.king_find_top_right(loc))
+        possible_moves.update(self.king_find_top_center(loc))
+        possible_moves.update(self.king_find_top_left(loc))
+        return possible_moves
+
+    def queen_possible_moves(self, loc, previous_turn):
+        possible_moves = {}
+        possible_moves.update(self.find_bottom(loc))
+        possible_moves.update(self.find_top(loc))
+        possible_moves.update(self.find_left(loc))
+        possible_moves.update(self.find_right(loc))
+        possible_moves.update(self.find_bottom_right(loc))
+        possible_moves.update(self.find_top_right(loc))
+        possible_moves.update(self.find_bottom_left(loc))
+        possible_moves.update(self.find_top_left(loc))
+        return possible_moves
+
+    def rook_possible_moves(self, loc, previous_turn):
+        possible_moves = {}
+        possible_moves.update(self.find_bottom(loc))
+        possible_moves.update(self.find_top(loc))
+        possible_moves.update(self.find_left(loc))
+        possible_moves.update(self.find_right(loc))
+        return possible_moves
     def find_loc(self, board):
         for column in range(1, 9):
             for row in range(1, 9):
@@ -184,5 +217,402 @@ class Piece(object):#object OR abc.ABC
                 loc = loc.top_left_loc
         return top_left_moves
 
+    def knight_possible_moves(self, loc, previous_turn):
+        possible_moves = {}
+        possible_moves.update(self.knight_bottom_locs(loc))
+        possible_moves.update(self.knight_top_locs(loc))
+        possible_moves.update(self.knight_right_locs(loc))
+        possible_moves.update(self.knight_left_locs(loc))
+        return possible_moves
+
+    def pawn_possible_moves(self, loc, previous_turn):
+        possible_moves = {}
+        if self.owner.player_key == 1:
+            if loc.top_left_loc is not None:
+                top_left = loc.top_left_loc
+            else:
+                top_left = None
+
+            if loc.top_rght_loc is not None:
+                top_rght = loc.top_rght_loc
+            else:
+                top_rght = None
+
+            if loc.mid_left_loc is not None:
+                mid_left = loc.mid_left_loc
+            else:
+                mid_left = None
+
+            if loc.mid_rght_loc is not None:
+                mid_rght = loc.mid_rght_loc
+            else:
+                mid_rght = None
+
+            if loc.top_cent_loc is not None:
+                cent = loc.top_cent_loc
+            else:
+                cent = None
+
+            if cent is not None and cent.top_cent_loc is not None:
+                two_up_cent = cent.top_cent_loc
+            else:
+                two_up_cent = None
+
+        else:  # player 2
+            if loc.bot_left_loc is not None:
+                top_left = loc.bot_left_loc
+            else:
+                top_left = None
+
+            if loc.bot_rght_loc is not None:
+                top_rght = loc.bot_rght_loc
+            else:
+                top_rght = None
+
+            if loc.mid_left_loc is not None:
+                mid_left = loc.mid_left_loc
+            else:
+                mid_left = None
+
+            if loc.mid_rght_loc is not None:
+                mid_rght = loc.mid_rght_loc
+            else:
+                mid_rght = None
+
+            if loc.bot_cent_loc is not None:
+                cent = loc.bot_cent_loc
+            else:
+                cent = None
+
+            if cent is not None and cent.bot_cent_loc is not None:
+                two_up_cent = cent.bot_cent_loc
+            else:
+                two_up_cent = None
+
+        if previous_turn['turn_type'] == 'TwoSpacePawn' and mid_left is not None \
+                and mid_left.current_piece == previous_turn['moved_piece']:  # Enpassant left
+            self.en_passant_kill = mid_left
+            possible_moves[top_left] = 'EnPassant'
+        if previous_turn['turn_type'] == 'TwoSpacePawn' and mid_rght is not None \
+                and mid_rght.current_piece == previous_turn['moved_piece']:  # Enpassant right
+            self.en_passant_kill = mid_rght
+            possible_moves[top_rght] = 'EnPassant'
+        if top_left is not None and top_left.current_piece is not None:  # diagonal left attack
+            if top_left.current_piece.owner != self.owner:
+                possible_moves[top_left] = 'Kill'
+        if top_rght is not None and top_rght.current_piece is not None:  # diagonal right attack
+            if top_rght.current_piece.owner != self.owner:
+                possible_moves[top_rght] = 'Kill'
+        if cent is not None and cent.current_piece is None:  # directly ahead
+            possible_moves[cent] = 'StandardMove'
+        if self.initial_location == loc and cent is not None and two_up_cent is not None \
+                and cent.current_piece is None and two_up_cent.current_piece is None:  # initial move with two spaces
+            possible_moves[two_up_cent] = 'TwoSpacePawn'
+        possible_moves_checked = self.promoted_pawn_check(possible_moves)
+        return possible_moves_checked
+
+    def knight_bottom_locs(self, loc):
+        locs = {}
+        locs_determinded = False
+        while locs_determinded == False:
+            if loc.bot_cent_loc is None:
+                break
+            else:
+                loc = loc.bot_cent_loc
+
+            if loc.bot_left_loc is None:
+                pass
+            elif loc.bot_left_loc.current_piece is None:
+                locs[loc.bot_left_loc] = 'StandardMove'
+            elif loc.bot_left_loc.current_piece.owner != self.owner:
+                locs[loc.bot_left_loc] = 'Kill'
+
+            if loc.bot_rght_loc is None:
+                pass
+            elif loc.bot_rght_loc.current_piece is None:
+                locs[loc.bot_rght_loc] = 'StandardMove'
+            elif loc.bot_rght_loc.current_piece.owner != self.owner:
+                locs[loc.bot_rght_loc] = 'Kill'
+            locs_determinded = True
+        return locs
+
+    def knight_top_locs(self, loc):
+        locs = {}
+        locs_determinded = False
+        while locs_determinded == False:
+            if loc.top_cent_loc is None:
+                break
+            else:
+                loc = loc.top_cent_loc
+
+            if loc.top_left_loc is None:
+                pass
+            elif loc.top_left_loc.current_piece is None:
+                locs[loc.top_left_loc] = 'StandardMove'
+            elif loc.top_left_loc.current_piece.owner != self.owner:
+                locs[loc.top_left_loc] = 'Kill'
+
+            if loc.top_rght_loc is None:
+                pass
+            elif loc.top_rght_loc.current_piece is None:
+                locs[loc.top_rght_loc] = 'StandardMove'
+            elif loc.top_rght_loc.current_piece.owner != self.owner:
+                locs[loc.top_rght_loc] = 'Kill'
+            locs_determinded = True
+        return locs
+
+    def knight_right_locs(self, loc):
+        locs = {}
+        locs_determinded = False
+        while locs_determinded == False:
+            if loc.mid_rght_loc is None:
+                break
+            else:
+                loc = loc.mid_rght_loc
+
+            if loc.bot_rght_loc is None:
+                pass
+            elif loc.bot_rght_loc.current_piece is None:
+                locs[loc.bot_rght_loc] = 'StandardMove'
+            elif loc.bot_rght_loc.current_piece.owner != self.owner:
+                locs[loc.bot_rght_loc] = 'Kill'
+
+            if loc.top_rght_loc is None:
+                pass
+            elif loc.top_rght_loc.current_piece is None:
+                locs[loc.top_rght_loc] = 'StandardMove'
+            elif loc.top_rght_loc.current_piece.owner != self.owner:
+                locs[loc.top_rght_loc] = 'Kill'
+            locs_determinded = True
+        return locs
+
+    def knight_left_locs(self, loc):
+        locs = {}
+        locs_determinded = False
+        while locs_determinded == False:
+            if loc.mid_left_loc is None:
+                break
+            else:
+                loc = loc.mid_left_loc
+
+            if loc.bot_left_loc is None:
+                pass
+            elif loc.bot_left_loc.current_piece is None:
+                locs[loc.bot_left_loc] = 'StandardMove'
+            elif loc.bot_left_loc.current_piece.owner != self.owner:
+                locs[loc.bot_left_loc] = 'Kill'
+
+            if loc.top_left_loc is None:
+                pass
+            elif loc.top_left_loc.current_piece is None:
+                locs[loc.top_left_loc] = 'StandardMove'
+            elif loc.top_left_loc.current_piece.owner != self.owner:
+                locs[loc.top_left_loc] = 'Kill'
+            locs_determinded = True
+        return locs
+
+    def promoted_pawn_check(self, possible_moves):
+        for move in possible_moves:
+            if move.rowID_str == '1' or move.rowID_str == '8':
+                possible_moves[move] = 'Promotion'
+        return possible_moves
+
+    def bishop_possible_moves(self, loc, previous_turn):
+        possible_moves = {}
+        possible_moves.update(self.find_bottom_right(loc))
+        possible_moves.update(self.find_top_right(loc))
+        possible_moves.update(self.find_bottom_left(loc))
+        possible_moves.update(self.find_top_left(loc))
+        return possible_moves
+
+    def king_find_bottom_right(self, loc):
+        bottom_right = {}
+        if loc.bot_rght_loc is None:
+            return bottom_right
+        elif loc.bot_rght_loc.current_piece is None:
+            bottom_right[loc.bot_rght_loc] = 'StandardMove'
+            return bottom_right
+        elif loc.bot_rght_loc.current_piece.owner == self.owner:
+            return bottom_right
+        elif loc.bot_rght_loc.current_piece.owner != self.owner:
+            bottom_right[loc.bot_rght_loc] = 'Kill'
+            return bottom_right
+
+    def king_find_bottom_center(self, loc):
+        bottom_center = {}
+        if loc.bot_cent_loc is None:
+            return bottom_center
+        elif loc.bot_cent_loc.current_piece is None:
+            bottom_center[loc.bot_cent_loc] = 'StandardMove'
+            return bottom_center
+        elif loc.bot_cent_loc.current_piece.owner == self.owner:
+            return bottom_center
+        elif loc.bot_cent_loc.current_piece.owner != self.owner:
+            bottom_center[loc.bot_cent_loc] = 'Kill'
+            return bottom_center
+
+    def king_find_bottom_left(self, loc):
+        bottom_left = {}
+        if loc.bot_left_loc is None:
+            return bottom_left
+        elif loc.bot_left_loc.current_piece is None:
+            bottom_left[loc.bot_left_loc] = 'StandardMove'
+            return bottom_left
+        elif loc.bot_left_loc.current_piece.owner == self.owner:
+            return bottom_left
+        elif loc.bot_left_loc.current_piece.owner != self.owner:
+            bottom_left[loc.bot_left_loc] = 'Kill'
+            return bottom_left
+
+    def king_find_mid_right(self, loc):
+        mid_right = {}
+        if loc.mid_rght_loc is None:
+            return mid_right
+        elif loc.mid_rght_loc.current_piece is None:
+            mid_right[loc.mid_rght_loc] = 'StandardMove'
+            return mid_right
+        elif loc.mid_rght_loc.current_piece.owner == self.owner:
+            return mid_right
+        elif loc.mid_rght_loc.current_piece.owner != self.owner:
+            mid_right[loc.mid_rght_loc] = 'Kill'
+            return mid_right
+
+    def king_find_mid_left(self, loc):
+        mid_left = {}
+        if loc.mid_left_loc is None:
+            return mid_left
+        elif loc.mid_left_loc.current_piece is None:
+            mid_left[loc.mid_left_loc] = 'StandardMove'
+            return mid_left
+        elif loc.mid_left_loc.current_piece.owner == self.owner:
+            return mid_left
+        elif loc.mid_left_loc.current_piece.owner != self.owner:
+            mid_left[loc.mid_left_loc] = 'Kill'
+            return mid_left
+
+    def king_find_top_right(self, loc):
+        top_right = {}
+        if loc.top_rght_loc is None:
+            return top_right
+        elif loc.top_rght_loc.current_piece is None:
+            top_right[loc.top_rght_loc] = 'StandardMove'
+            return top_right
+        elif loc.top_rght_loc.current_piece.owner == self.owner:
+            return top_right
+        elif loc.top_rght_loc.current_piece.owner != self.owner:
+            top_right[loc.top_rght_loc] = 'Kill'
+            return top_right
+
+    def king_find_top_center(self, loc):
+        top_center = {}
+        if loc.top_cent_loc is None:
+            return top_center
+        elif loc.top_cent_loc.current_piece is None:
+            top_center[loc.top_cent_loc] = 'StandardMove'
+            return top_center
+        elif loc.top_cent_loc.current_piece.owner == self.owner:
+            return top_center
+        elif loc.top_cent_loc.current_piece.owner != self.owner:
+            top_center[loc.top_cent_loc] = 'Kill'
+            return top_center
+
+    def king_find_top_left(self, loc):
+        top_left = {}
+        if loc.top_left_loc is None:
+            return top_left
+        elif loc.top_left_loc.current_piece is None:
+            top_left[loc.top_left_loc] = 'StandardMove'
+            return top_left
+        elif loc.top_left_loc.current_piece.owner == self.owner:
+            return top_left
+        elif loc.top_left_loc.current_piece.owner != self.owner:
+            top_left[loc.top_left_loc] = 'Kill'
+            return top_left
+
+    def check_if_under_threat(self, loc, previous_turn):
+        piece_type = 'knight'
+        status = self.check_moves(moves=self.knight_possible_moves(loc, previous_turn), piece_type=piece_type)
+        if status == True:
+            return True
+        piece_type = 'bishop'
+        status = self.check_moves(moves=self.bishop_possible_moves(loc, previous_turn), piece_type=piece_type)
+        if status == True:
+            return True
+        piece_type = 'king'
+        status = self.check_moves(moves=self.king_standard_moves(loc, previous_turn), piece_type=piece_type)
+        if status == True:
+            return True
+        piece_type = 'queen'
+        status = self.check_moves(moves=self.queen_possible_moves(loc, previous_turn), piece_type=piece_type)
+        if status == True:
+            return True
+        piece_type = 'rook'
+        status = self.check_moves(moves=self.rook_possible_moves(loc, previous_turn), piece_type=piece_type)
+        if status == True:
+            return True
+        piece_type = 'pawn'
+        status = self.threatening_pawn(loc, previous_turn)
+        if status == True:
+            return True
+        return False
+
+    def set_under_threat(self, loc, previous_turn):
+        self.under_threat = self.check_if_under_threat(loc, previous_turn)
 
 
+    def threatening_pawn(self, loc, previous_turn):
+        if self.enpassant_threat(loc, previous_turn) == True:
+            return True
+        if loc.current_piece.initial_location.rowID == 1 or loc.current_piece.initial_location.rowID == 2:
+            if loc.bot_left_loc is not None and loc.bot_left_loc.current_piece is not None \
+                    and loc.bot_left_loc.current_piece.key.__contains__('pawn')\
+                    and loc.bot_left_loc.current_piece.owner != loc.current_piece.owner:
+                return True
+            if loc.bot_rght_loc is not None and loc.bot_rght_loc.current_piece is not None \
+                    and loc.bot_rght_loc.current_piece.key.__contains__('pawn')\
+                    and loc.bot_rght_loc.current_piece.owner != loc.current_piece.owner:
+                return True
+        if loc.current_piece.initial_location.rowID == 7 or loc.current_piece.initial_location.rowID == 8:
+            if loc.top_left_loc is not None and loc.top_left_loc.current_piece is not None \
+                    and loc.top_left_loc.current_piece.key.__contains__('pawn')\
+                    and loc.top_left_loc.current_piece.owner != loc.current_piece.owner:
+                return True
+            if loc.top_rght_loc is not None and loc.top_rght_loc.current_piece is not None \
+                    and loc.top_rght_loc.current_piece.key.__contains__('pawn')\
+                    and loc.top_rght_loc.current_piece.owner != loc.current_piece.owner:
+                return True
+        return False
+
+
+
+    def enpassant_threat(self, loc, previous_turn):
+        last_moved_piece = False
+        if self == previous_turn['moved_piece']:
+            last_moved_piece = True
+        pt = False
+        if previous_turn['turn_type'] == 'TwoSpacePawn':
+            pt = True
+        ml_loc = loc.mid_left_loc
+        mr_loc = loc.mid_rght_loc
+        if last_moved_piece and pt and\
+                (
+                    (
+                        ml_loc is not None
+                        and ml_loc.current_piece is not None
+                        and ml_loc.current_piece.key.__contains__('pawn')
+                    )
+                or
+                    (
+                                mr_loc is not None
+                     and mr_loc.current_piece is not None
+                     and mr_loc.current_piece.key.__contains__('pawn')
+                    )
+                ):
+            return True
+        return False
+
+    def check_moves(self, moves, piece_type):
+        for move in moves:
+            if move.current_piece is not None and move.current_piece.key.__contains__(piece_type):
+                return True
+        return False

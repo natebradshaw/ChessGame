@@ -7,10 +7,6 @@ class Rook(Piece):
 
 
     def find_possible_moves(self, loc, previous_turn):
-        possible_moves = {}
-        possible_moves.update(self.find_bottom(loc))
-        possible_moves.update(self.find_top(loc))
-        possible_moves.update(self.find_left(loc))
-        possible_moves.update(self.find_right(loc))
+        possible_moves = self.rook_possible_moves(loc, previous_turn)
         return possible_moves
 
