@@ -6,6 +6,10 @@ class Pawn(Piece):
     def __init__(self, piece_key, player):
         super(Pawn, self).__init__(piece_key, player)
         self.en_passant_kill = None
+        self.promoted = False
+
+    def set_promoted(self, status):
+        self.promoted = status
 
     def set_starting_position(self, board):
         column = players_pieces_location_map[self.key]

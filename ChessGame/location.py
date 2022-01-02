@@ -11,6 +11,7 @@ class Location:
         self.name = f'{column_name.upper()}{row}'
         self.key = f'{column_key}{row}'
         self.current_piece = None
+        self.hypothetical_piece = None
         self.board = board
         self.top_left_loc = None
         self.top_cent_loc = None
@@ -81,12 +82,19 @@ class Location:
         else:
             return None
 
-    def add_piece(self, piece):
+    def add_piece(self, piece, test='current_piece'):
+        new_test = self.set_piece(test)
         self.current_piece = piece
         piece.set_location(self)
 
+    def get_piece(self, att):
+        return getattr(self, att)
+
     def remove_piece(self):
         pass
+
+    def set_hypothetical_piece(self, piece):
+        self.hypothetical_piece = piece
 
     def test_location(self):
         start = time()
@@ -106,6 +114,12 @@ class Location:
             return f'[___]'
         else:
             return f'[{self.current_piece.short_hand_name}]'
+
+    def present_location_hypothetical(self):
+        if self.hypothetical_piece is None:
+            return f'[___]'
+        else:
+            return f'[{self.hypothetical_piece.short_hand_name}]'
 
     def present_location_under_threat(self):
         if self.current_piece is None:

@@ -83,4 +83,21 @@ class King(Piece):
                     self.castling_4_king_loc = king_validated_loc
                     return True
 
+    def validate_check_mate(self, king_loc, previous_turn, board):
+        possible_moves = self.find_possible_moves(king_loc, previous_turn)
+        for move in possible_moves:
+            hypothetical_threat = self.hypothetical_threat_move(king_loc, previous_turn, move, king_loc, board)
+            if not hypothetical_threat:
+                return False
+        for row in range(1, 9):
+            for column in board.structure:
+                test_loc = board.structure[column][str(row)]
+                if test_loc.current_piece is not None and test_loc.current_piece.owner == self.owner:
+                    test_loc_possible_moves = test_loc.current_piece.find_possible_moves(loc=test_loc, previous_turn=previous_turn)
+                    for move in test_loc_possible_moves:
+                        hypothetical_threat = self.hypothetical_threat_move(test_loc, previous_turn, move, king_loc, board)
+                        if not hypothetical_threat:
+                            return False
+        return True
+
 
