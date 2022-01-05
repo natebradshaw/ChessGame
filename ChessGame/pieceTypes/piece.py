@@ -6,6 +6,7 @@ class Piece(object):#object OR abc.ABC
     def __init__(self, key, player):
         Piece.count += 1
         self.key = key
+        self.ml_key = Piece.count
         self.initial_location = None
         self.owner = player
         self.alive = True

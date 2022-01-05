@@ -2,16 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a812c9f0-687e-45cc-9806-ed6b0b7385b1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/ChessGame/playerTypes/kill_bot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessGame/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/board.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/config2.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/config2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/location.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/location.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/king.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/king.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/knight.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/knight.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/pawn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/piece.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessGame/player.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -125,7 +121,7 @@
         <line-breakpoint suspend="THREAD" type="python-line">
           <condition expression="loc.name.upper() == 'C4'" language="Python" />
           <url>file://$PROJECT_DIR$/ChessGame/pieceTypes/piece.py</url>
-          <line>594</line>
+          <line>595</line>
           <option name="timeStamp" value="112" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -137,14 +133,8 @@
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <condition expression="board.structure[column_key][row_key] is None" language="Python" />
           <url>file://$PROJECT_DIR$/ChessGame/pieceTypes/piece.py</url>
-          <line>86</line>
+          <line>87</line>
           <option name="timeStamp" value="187" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <condition expression="old_loc is None" language="Python" />
-          <url>file://$PROJECT_DIR$/ChessGame/game.py</url>
-          <line>115</line>
-          <option name="timeStamp" value="188" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

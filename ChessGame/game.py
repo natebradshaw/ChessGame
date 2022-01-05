@@ -1,3 +1,4 @@
+import json
 from ChessGame.pieceTypes.queen import Queen
 from ChessGame.pieceTypes.rook import Rook
 from ChessGame.pieceTypes.bishop import Bishop
@@ -8,11 +9,11 @@ from ChessGame.playerTypes.kill_bot import KillBot
 from ChessGame.pieceTypes.piece import Piece
 from ChessGame.board import Board
 from ChessGame.config import possible_piece_types
-from ChessGame.config2 import players_pieces_map
+from ChessGame.config2 import players_pieces_map, turn_types
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, bot_game=False, player_1_bot_type=False, player_2_bot_type=False):
         self.board = self.setBoard()
         self.players = {'1': None, '2': None}
         self.game_status = 'Introduction'
@@ -21,6 +22,11 @@ class Game:
         self.loser = None
         self.turn_count = 0
         self.draw = False
+        self.stalemate = False
+        self.game_details = []
+        self.bot_game = bot_game
+        self.player_1_bot_type = player_1_bot_type
+        self.player_2_bot_type = player_2_bot_type
 
     def set_all_location_attributes(self):
         for column in range(1, 9):
@@ -49,20 +55,33 @@ class Game:
                     # self.set_initial_piece_location(piece)
 
     def setPlayer(self, player_count):
-        valid_entree = False
-        while valid_entree == False:
-            player_type = input(f'PLayer {player_count}, are you a Randbot, Killbot, or person?').upper()
-            if player_type == 'RANDBOT' or player_type == 'PERSON' or player_type == 'KILLBOT':
-                valid_entree = True
-        player_name = input(f'Player {player_count}, what is your name?')
-        if player_type == 'RANDBOT':
-            player = RandBot(player_count, player_name)
-        elif player_type == 'KILLBOT':
-            player = KillBot(player_count, player_name)
+        if self.bot_game == True:
+            if player_count == 1:
+                player_type = self.player_1_bot_type
+            else:
+                player_type = self.player_2_bot_type
+            player_name = str(player_count)
+            if player_type == 'RANDBOT':
+                player = RandBot(player_count, player_name)
+            elif player_type == 'KILLBOT':
+                player = KillBot(player_count, player_name)
+            self.set_players_pieces(player)
+            return player
         else:
-            player = Player(player_count, player_name)
-        self.set_players_pieces(player)
-        return player
+            valid_entree = False
+            while valid_entree == False:
+                player_type = input(f'PLayer {player_count}, are you a Randbot, Killbot, or person?').upper()
+                if player_type == 'RANDBOT' or player_type == 'PERSON' or player_type == 'KILLBOT':
+                    valid_entree = True
+            player_name = input(f'Player {player_count}, what is your name?')
+            if player_type == 'RANDBOT':
+                player = RandBot(player_count, player_name)
+            elif player_type == 'KILLBOT':
+                player = KillBot(player_count, player_name)
+            else:
+                player = Player(player_count, player_name)
+            self.set_players_pieces(player)
+            return player
 
     def setBoard(self):
         board = Board()
@@ -87,6 +106,7 @@ class Game:
 
     def introduction(self):
         print("Welcome to Chess")
+        Piece.count = 0
         self.set_all_location_attributes()
         for player_count in self.players:
             player = self.setPlayer(int(player_count))
@@ -188,11 +208,29 @@ class Game:
         self.previous_turn['check_status'] = king_loc.current_piece.under_threat
         self.display_turn_details()
         self.validate_draw()
+        self.save_turn_details()
         if self.previous_turn['check_status'] == True:
             check_mate = king_loc.current_piece.validate_check_mate(king_loc, self.previous_turn, self.board)
             if check_mate:
                 self.finish_game()
+        else:
+            opponent = king_loc.current_piece.owner
+            stalemate = self.stalemate_validate(opponent)
+            if stalemate:
+                self.stalemate = True
+                self.draw = True
+                self.conclusion()
         # self.board.present_board_statuses() # needed only for testing
+
+    def stalemate_validate(self, player):
+        for piece in player.pieces:
+            if piece.alive:
+                loc = piece.find_loc(self.board)
+                possible_locs = piece.find_possible_moves(piece.find_loc(self.board), self.previous_turn)
+                validated_locs = self.validate_moves(loc, piece, possible_locs)
+                if len(validated_locs) > 0:
+                    return False
+        return True
 
     def present_turn(self):
         print(f'{self.previous_turn}')
@@ -258,11 +296,74 @@ class Game:
                     return loc
 
     def conclusion(self):
+        if self.winner:
+            self.save_game_data()
+        self.board.present_board()
         if self.draw == True:
             print('The game concludes in a draw.')
         else:
             print(f'{self.loser.name} (Player {self.loser.player_key}) is in check mate.')
             print(f'Congragulations {self.winner.name} (Player {self.winner.player_key}), you win!')
+
+    def save_turn_details(self):
+        turn_record = {}
+        for player in self.players:
+            for piece in self.players[player].pieces:
+                row_key = f'{self.players[player].player_key}{piece.key}_row'
+                col_key = f'{self.players[player].player_key}{piece.key}_col'
+                piece_threat = f'{self.players[player].player_key}{piece.key}_threat'
+                if piece.alive:
+                    loc = piece.find_loc(self.board)
+                    col_name = loc.column_key
+                    row_name = loc.rowID
+                    turn_record[col_key] = col_name
+                    turn_record[row_key] = row_name
+                    turn_record[piece_threat] = int(piece.under_threat) + 1
+                else:
+                    turn_record[col_key] = 0
+                    turn_record[row_key] = 0
+                    turn_record[row_key] = 0
+        turn_record['turn_type'] = turn_types[self.previous_turn['turn_type']]
+        turn_record['check_status'] = 1 if self.previous_turn['check_status'] else 0
+        turn_record['player_turn'] = int(self.previous_turn['moved_piece'].owner.player_key)
+        turn_record['old_loc_col'] = self.previous_turn['old_loc'].column_key
+        turn_record['old_loc_row'] = self.previous_turn['old_loc'].rowID
+        turn_record['new_loc_col'] = self.previous_turn['old_loc'].column_key
+        turn_record['new_loc_row'] = self.previous_turn['old_loc'].rowID
+        turn_record['turn_number'] = self.turn_count
+        counter = 0
+        for piece_type in possible_piece_types:
+            counter += 1
+            if type(self.previous_turn['moved_piece']) == piece_type['cls']:
+                turn_record['moved_piece_type'] = counter
+        self.game_details.append(turn_record)
+
+    def save_game_data(self):
+        player_1_status = 1 if self.winner and self.winner.player_key == 1 else 0
+        player_2_status = 1 if self.winner and self.winner.player_key == 2 else 0
+        for turn in self.game_details:
+            if turn['player_turn'] == 1:
+                turn['won'] = player_1_status
+            else:
+                turn['won'] = player_2_status
+        filename = 'GameData.json'
+        try:
+        # 1. Read file contents
+            with open(filename, "r") as file:
+                data = json.load(file)
+        # 2. Update json object
+            for turn in self.game_details:
+                data.append(turn)
+        # 3. Write json file
+            with open(filename, "w") as file:
+                json.dump(data, file)
+        except Exception as e:
+            lst = [{'alice': 24, 'bob': 27}]
+            # Write the initial json object (list of dicts)
+            with open(filename, mode='w') as f:
+                json.dump(self.game_details, f)
+            # Append the new dict to the list and overwrite whole file
+
 
     # For Testing:
     def display_init_locations(self, player_key):
