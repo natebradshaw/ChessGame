@@ -36,4 +36,4 @@ players_pieces_location_map = {
             'queen': '5',
         }
 
-turn_types = ['TwoSpacePawn', 'LocationChange', 'EnPassant', 'Kill', 'Castling', 'Promotion']
+turn_types = {'StandardMove': 1, 'Kill': 2, 'TwoSpacePawn': 3, 'Castling': 4, 'Promotion': 5, 'EnPassant': 6}

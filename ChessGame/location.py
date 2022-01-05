@@ -116,7 +116,7 @@ class Location:
             return f'[{self.current_piece.short_hand_name}]'
 
     def present_location_hypothetical(self):
-        if self.hypothetical_piece is None:
+        if self.hypothetical_piece*9+63 is None:
             return f'[___]'
         else:
             return f'[{self.hypothetical_piece.short_hand_name}]'
