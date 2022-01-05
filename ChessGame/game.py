@@ -114,7 +114,7 @@ class Game:
         self.game_status = '1'
 
     def turn(self):
-        self.board.present_board() #Present the user the board
+        #self.board.present_board() #Present the user the board
         active_player = self.players[self.game_status] #Player makes a move
         self.move(active_player)
         if self.winner is None:
@@ -139,14 +139,14 @@ class Game:
                 continue
             elif len(possible_locations.keys()) == 0 and type(active_player) != Player:
                 continue
-            print(f'Possible Locations:{self.display_possible_locations(possible_locations)}')
+            #print(f'Possible Locations:{self.display_possible_locations(possible_locations)}')
             possible_locations = self.validate_moves(old_loc, selected_piece, possible_locations)
             if len(possible_locations.keys()) == 0 and type(active_player) == Player:
                 print('The piece selected has no possible moves. Select another piece.')
                 continue
             elif len(possible_locations.keys()) == 0 and type(active_player) != Player:
                 continue
-            print(f'Validated Locations:{self.display_possible_locations(possible_locations)}')
+            #print(f'Validated Locations:{self.display_possible_locations(possible_locations)}')
             new_loc, turn_type = self.select_piece_new_location(selected_piece, possible_locations)
             self.finalize_move(old_loc, new_loc, selected_piece, turn_type)
             finished_move = True
@@ -206,7 +206,7 @@ class Game:
         self.previous_turn['moved_piece'] = piece
         self.previous_turn['turn_type'] = turn_type
         self.previous_turn['check_status'] = king_loc.current_piece.under_threat
-        self.display_turn_details()
+        #self.display_turn_details()
         self.validate_draw()
         self.save_turn_details()
         if self.previous_turn['check_status'] == True:
@@ -216,11 +216,18 @@ class Game:
         else:
             opponent = king_loc.current_piece.owner
             stalemate = self.stalemate_validate(opponent)
+            drawn_out = self.drawn_out()
             if stalemate:
                 self.stalemate = True
+            if stalemate or drawn_out:
                 self.draw = True
                 self.conclusion()
         # self.board.present_board_statuses() # needed only for testing
+
+    def drawn_out(self):
+        if self.turn_count > 250:
+            return True
+        return False
 
     def stalemate_validate(self, player):
         for piece in player.pieces:
@@ -286,7 +293,6 @@ class Game:
             self.loser = self.players['2']
         else:
             self.loser = self.players['1']
-        self.board.present_board()
 
     def search_loc_from_name(self, search_loc):
         for row in range(1,9):
@@ -298,7 +304,7 @@ class Game:
     def conclusion(self):
         if self.winner:
             self.save_game_data()
-        self.board.present_board()
+        #self.board.present_board()
         if self.draw == True:
             print('The game concludes in a draw.')
         else:

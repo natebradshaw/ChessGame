@@ -13,7 +13,7 @@ class Pawn(Piece):
 
     def set_starting_position(self, board):
         column = players_pieces_location_map[self.key]
-        if self.owner.player_key == 1:
+        if self.owner.player_key == 2:
             row = '7'
         else:
             row = '2'

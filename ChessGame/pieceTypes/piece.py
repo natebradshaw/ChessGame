@@ -31,7 +31,7 @@ class Piece(object):#object OR abc.ABC
 
     def set_starting_position(self, board):
         column = players_pieces_location_map[self.key]
-        if self.owner.player_key == 1:
+        if self.owner.player_key == 2:
             row = '8'
         else:
             row = '1'
@@ -567,8 +567,8 @@ class Piece(object):#object OR abc.ABC
         if self.enpassant_threat(loc, previous_turn) == True:
             return True
         if (loc.get_piece(piece_att) is not None) and \
-                (loc.get_piece(piece_att).initial_location.rowID == 1 or
-                 loc.get_piece(piece_att).initial_location.rowID == 2):
+                (loc.get_piece(piece_att).initial_location.rowID == 8 or
+                 loc.get_piece(piece_att).initial_location.rowID == 7):
             if loc.bot_left_loc is not None and loc.bot_left_loc.get_piece(piece_att) is not None \
                     and loc.bot_left_loc.get_piece(piece_att).key.__contains__('pawn')\
                     and loc.bot_left_loc.get_piece(piece_att).owner != loc.get_piece(piece_att).owner:
@@ -578,8 +578,8 @@ class Piece(object):#object OR abc.ABC
                     and loc.bot_rght_loc.get_piece(piece_att).owner != loc.get_piece(piece_att).owner:
                 return True
         if (loc.get_piece(piece_att) is not None) and \
-                (loc.get_piece(piece_att).initial_location.rowID == 7 or
-                 loc.get_piece(piece_att).initial_location.rowID == 8):
+                (loc.get_piece(piece_att).initial_location.rowID == 2 or
+                 loc.get_piece(piece_att).initial_location.rowID == 1):
             if loc.top_left_loc is not None and loc.top_left_loc.get_piece(piece_att) is not None \
                     and loc.top_left_loc.get_piece(piece_att).key.__contains__('pawn')\
                     and loc.top_left_loc.get_piece(piece_att).owner != loc.get_piece(piece_att).owner:
@@ -601,18 +601,20 @@ class Piece(object):#object OR abc.ABC
             pt = True
         ml_loc = loc.mid_left_loc
         mr_loc = loc.mid_rght_loc
-        if last_moved_piece and pt and\
+        if last_moved_piece and pt and previous_turn['moved_piece'].owner is not None and\
                 (
                     (
                         ml_loc is not None
                         and ml_loc.get_piece(piece_att) is not None
+                        and ml_loc.get_piece(piece_att).owner != previous_turn['moved_piece'].owner
                         and ml_loc.get_piece(piece_att).key.__contains__('pawn')
                     )
                 or
                     (
-                                mr_loc is not None
-                     and mr_loc.get_piece(piece_att) is not None
-                     and mr_loc.get_piece(piece_att).key.__contains__('pawn')
+                        mr_loc is not None
+                        and mr_loc.get_piece(piece_att) is not None
+                        and mr_loc.get_piece(piece_att).owner != previous_turn['moved_piece'].owner
+                        and mr_loc.get_piece(piece_att).key.__contains__('pawn')
                     )
                 ):
             return True

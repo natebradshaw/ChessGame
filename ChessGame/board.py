@@ -41,7 +41,7 @@ class Board:
             column_formatted = f'|={column_name.upper()}=|'
             header+=column_formatted
         print(header)
-        for row in range(1,9):
+        for row in range(8,0,-1):
             row_str = str(row)
             line = f' {row_str}'
             for column in self.structure:
