@@ -32,8 +32,8 @@ players_pieces_location_map = {
             'knight2': '7',
             'bishop1': '3',
             'bishop2': '6',
-            'king': '4',
-            'queen': '5',
+            'queen': '4',
+            'king': '5',
         }
 
 turn_types = {'StandardMove': 1, 'Kill': 2, 'TwoSpacePawn': 3, 'Castling': 4, 'Promotion': 5, 'EnPassant': 6}

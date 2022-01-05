@@ -39,7 +39,7 @@ class KillBot(Player):
 
         game_turn_count = kwargs.pop('turn_count')
         var = select_piece_main()
-        print(var.short_hand_name)
+        #print(var.short_hand_name)
         return var
 
     def select_piece_new_location(self, selected_piece, possible_locations, **kwargs):
@@ -49,13 +49,17 @@ class KillBot(Player):
             loc_list = []
             for loc in possible_locations:
                 loc_list.append(loc)
-            print(f'{loc_list[random_selection_key].name}, {possible_locations[loc_list[random_selection_key]]}')
+            #print(f'{loc_list[random_selection_key].name}, {possible_locations[loc_list[random_selection_key]]}')
             return loc_list[random_selection_key], possible_locations[loc_list[random_selection_key]]
 
         for loc in possible_locations:
             if possible_locations[loc] == 'Kill':
                 return loc, possible_locations[loc]
             elif possible_locations[loc] == 'Promotion':
+                return loc, possible_locations[loc]
+            elif possible_locations[loc] == 'EnPassant':
+                return loc, possible_locations[loc]
+            elif possible_locations[loc] == 'Castling':
                 return loc, possible_locations[loc]
         return random_selection()
 

@@ -23,24 +23,24 @@ class Location:
         self.bot_rght_loc = None
 
     def get_top_left_loc(self):
-        if self.column_key > 1 and self.rowID > 1:
+        if self.column_key > 1 and self.rowID < 8:
             new_column = str(self.column_key - 1)
-            new_row = str(self.rowID - 1)
+            new_row = str(self.rowID + 1)
             return self.board.structure[new_column][new_row]
         else:
             return None
 
     def get_top_center_loc(self):
-        if self.rowID > 1:
-            new_row = str(self.rowID - 1)
+        if self.rowID < 8:
+            new_row = str(self.rowID + 1)
             return self.board.structure[self.column_key_str][new_row]
         else:
             return None
 
     def get_top_right_loc(self):
-        if self.column_key < 8 and self.rowID > 1:
+        if self.column_key < 8 and self.rowID < 8:
             new_column = str(self.column_key + 1)
-            new_row = str(self.rowID - 1)
+            new_row = str(self.rowID + 1)
             return self.board.structure[new_column][new_row]
         else:
             return None
@@ -60,24 +60,24 @@ class Location:
             return None
 
     def get_bottom_left_loc(self):
-        if self.column_key > 1 and self.rowID < 8:
+        if self.column_key > 1 and self.rowID > 1:
             new_column = str(self.column_key - 1)
-            new_row = str(self.rowID + 1)
+            new_row = str(self.rowID - 1)
             return self.board.structure[new_column][new_row]
         else:
             return None
 
     def get_bottom_center_loc(self):
-        if self.rowID < 8:
-            new_row = str(self.rowID + 1)
+        if self.rowID > 1:
+            new_row = str(self.rowID - 1)
             return self.board.structure[self.column_key_str][new_row]
         else:
             return None
 
     def get_bottom_right_loc(self):
-        if self.column_key < 8 and self.rowID < 8:
+        if self.column_key < 8 and self.rowID > 1:
             new_column = str(self.column_key + 1)
-            new_row = str(self.rowID + 1)
+            new_row = str(self.rowID - 1)
             return self.board.structure[new_column][new_row]
         else:
             return None
@@ -116,7 +116,7 @@ class Location:
             return f'[{self.current_piece.short_hand_name}]'
 
     def present_location_hypothetical(self):
-        if self.hypothetical_piece*9+63 is None:
+        if self.hypothetical_piece is None:
             return f'[___]'
         else:
             return f'[{self.hypothetical_piece.short_hand_name}]'

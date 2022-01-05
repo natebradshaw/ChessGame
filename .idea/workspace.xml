@@ -3,11 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="a812c9f0-687e-45cc-9806-ed6b0b7385b1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/board.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/config2.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/config2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/location.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/location.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChessGame/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/pawn.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/pawn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChessGame/pieceTypes/piece.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/pieceTypes/piece.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChessGame/playerTypes/kill_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/ChessGame/playerTypes/kill_bot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -131,10 +133,9 @@
           <option name="timeStamp" value="182" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <condition expression="board.structure[column_key][row_key] is None" language="Python" />
           <url>file://$PROJECT_DIR$/ChessGame/pieceTypes/piece.py</url>
-          <line>87</line>
-          <option name="timeStamp" value="187" />
+          <line>603</line>
+          <option name="timeStamp" value="227" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
