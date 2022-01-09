@@ -18,6 +18,8 @@ class Player:
 
     def select_piece(self, previous_turn, **kwargs):
         try:
+            if previous_turn['check_status']:
+                print(f'{self.name}, your king is in check.')
             selected_piece = None
             while selected_piece is None:
                 piece_name = input(f'{self.name}, what piece would you like to move?')
