@@ -129,8 +129,6 @@ class Game:
     def move(self, active_player):
         finished_move = False
         while finished_move == False:
-            if self.previous_turn['check_status'] == True:
-                print(f'{active_player.name}, your king is in check.')
             selected_piece = active_player.select_piece(self.previous_turn, turn_count=self.turn_count)
             old_loc = selected_piece.find_loc(self.board)
             possible_locations = selected_piece.find_possible_moves(old_loc, self.previous_turn)
